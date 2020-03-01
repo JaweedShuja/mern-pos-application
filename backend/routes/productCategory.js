@@ -1,9 +1,9 @@
 const router = require('express').Router();
-let Product = require('../models/productCategory.model.js');
+let ProductCategory = require('../models/productCategory.model.js');
 
 router.route('/').get((req, res) => {
-    Product.find()
-        .then(productCategories => res.response(productCategories))
+    ProductCategory.find()
+        .then(productCategories => res.json(productCategories))
         .catch(err => res.status(400).json('Error: ' + err))
 })
 
@@ -20,7 +20,7 @@ router.route('/add').post((req, res) => {
 })
 
 router.route('/:id').get((req, res) => {
-    Product.findById(req.params.id)
+    ProductCategory.findById(req.params.id)
         .then(productCategory => res.json(productCategory))
         .catch(err => res.status(400).json('Error: ' + err))
 })
@@ -32,7 +32,7 @@ router.route('/:id').delete((req, res) => {
 })
 
 router.route('/update/:id').post((req, res) => {
-    Product.findById(req.params.id)
+    ProductCategory.findById(req.params.id)
         .then(productCategory => {
             productCategory.productCategoryName = req.body.productCategoryName;
             

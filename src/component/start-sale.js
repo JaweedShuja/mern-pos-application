@@ -15,6 +15,7 @@ export default class StartSale extends Component{
             filteredItems:[],
             selectedItems:[],
             totalAmount:0,
+            customerName:"Walk In Customer"
         }
 
         this.show = this.show.bind(this)
@@ -22,6 +23,9 @@ export default class StartSale extends Component{
         this.plus = this.plus.bind(this)
         this.minus = this.minus.bind(this)
         this.remove = this.remove.bind(this)
+        this.confirm = this.confirm.bind(this)
+        this.clear = this.clear.bind(this)
+        this.onChangeCustomerName = this.onChangeCustomerName.bind(this)
     }
     componentDidMount(){
         axios.get('http://localhost:5000/productCategory/')
@@ -50,19 +54,12 @@ export default class StartSale extends Component{
                 filteredItems:rebels
             })
         })
-        
-        
-
-        
     }
     show(name){
         this.setState({
             selectedCategory:name
         })
         console.log(this.state.selectedCategory)
-        // var filtered = this.state.items.filter(function(item){
-        //     return item.productCategory === this.state.selectedCategory;
-        // })
         console.log(this.state.items)
         const rebels = this.state.items.filter(item => item.productCategory === name);
         console.log(rebels)
@@ -139,6 +136,39 @@ export default class StartSale extends Component{
         })
     }
 
+    onChangeCustomerName(e){
+        this.setState({
+            customerName:e.target.value,
+        })
+    }
+
+    confirm(selectedItems, totalAmount){
+        
+
+        const history = {
+            customerName: this.state.customerName,
+            totalAmount: totalAmount,
+            productHistory: selectedItems,
+        }
+
+        axios.post('http://localhost:5000/history/add',history)
+            .then(res => alert('Order Confirmed'))
+            .catch(err => console.log(err))
+
+        this.setState({
+            selectedItems:[],
+            totalAmount:0,
+        })    
+
+
+    }
+    clear(){
+        this.setState({
+            selectedItems:[],
+            totalAmount:0,
+        })
+    }
+
     render(){
         return(
             <div className="container-flout">
@@ -151,7 +181,10 @@ export default class StartSale extends Component{
                     <Items itemList={this.state.filteredItems} selectedCategory={this.state.selectedCategory} addSale={this.addSale}/>
                 </div>
                 <div className="col-sm-4">
+                <input type="text" className="form-control"  placeholder="Customer Name" onChange={this.onChangeCustomerName}/>
                     <Table  items={this.state.selectedItems} total={this.state.totalAmount} plus={this.plus} minus={this.minus} remove={this.remove} />
+                    <button onClick={() => this.confirm(this.state.selectedItems,this.state.totalAmount)} type="button" className="btn btn-success">Confirm</button>
+                    <button onClick={() => this.clear()} style={{marginLeft:10}} type="buttonName" class="btn btn-danger">Clear</button>
                 </div>  
                 </div>
             </div>

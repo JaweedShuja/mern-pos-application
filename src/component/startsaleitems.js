@@ -18,7 +18,7 @@ export default class StartSaleItems extends Component{
                     <div className="card-body">
                         <h5 className="card-title">{item.productName}</h5>
                         <p className="card-text">Rs: {item.productPrice}</p>
-                        <a href="#" className="btn btn-success">Select</a>
+                        <a href="#" className="btn btn-success" onClick={() => this.props.addSale(item)}>Select</a>
                     </div>
                     </div>)}
                 </div>
